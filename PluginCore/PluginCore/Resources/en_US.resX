@@ -2048,6 +2048,10 @@ Alternatively, Adobe Flash Professional can also be used for syntax checking - p
     <value>&amp;Test Project</value>
     <comment>Modified after 3.3.4</comment>
   </data>
+  <data name="ProjectManager.Label.Memory" xml:space="preserve">
+    <value>&amp;Memory</value>
+    <comment>Modified after 3.3.4</comment>
+  </data>
   <data name="ProjectManager.Label.RunProject" xml:space="preserve">
     <value>&amp;Run Project</value>
     <comment>Added after 4.6.1</comment>
@@ -3452,6 +3456,9 @@ Please note that with injection enabled, you will not be able to use many projec
   </data>
   <data name="FlashDebugger.Label.Next" xml:space="preserve">
     <value>&amp;Step Over</value>
+  </data>
+  <data name="FlashDebugger.Label.Memory" xml:space="preserve">
+    <value>&amp;Memory</value>
   </data>
   <data name="FlashDebugger.Label.Pause" xml:space="preserve">
     <value>&amp;Pause</value>

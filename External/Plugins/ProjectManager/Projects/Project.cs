@@ -105,6 +105,11 @@ namespace ProjectManager.Projects
             return new ProjectManager.Controls.PropertiesDialog();
         }
 
+        public virtual ProjectManager.Controls.MemoryDialog CreateMemoryDialog()
+        {
+            return new ProjectManager.Controls.MemoryDialog();
+        }
+
         public void OnClasspathChanged()
         {
             absClasspaths = null;

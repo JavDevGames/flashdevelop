@@ -364,10 +364,58 @@ namespace FlashDebugger.Controls
 
         void TreeExpanding(Object sender, TreeViewAdvEventArgs e)
         {
+            int i;
+            int j;
+
             if (e.Node.Index >= 0)
             {
                 ListChildItems(e.Node.Tag as ValueNode);
             }
+
+            Node node = e.Node.Tag as ValueNode;
+            Node topMost = node;
+
+            while(node.Parent != null && node.Parent.Parent != null)
+            {
+                topMost = node.Parent;
+                node = node.Parent;
+            }
+            
+            if(topMost != null)
+            {
+                ValueNode valNode = topMost as ValueNode;
+
+                if(valNode != null)
+                {
+                    FlashInterface flashInterface = PluginMain.debugManager.FlashInterface;
+                    Variable[] valNodeMembers = valNode.PlayerValue.getMembers(flashInterface.Session);
+
+                    for(i = 0; i < valNodeMembers.Length; ++i)
+                    {
+                        int memberCount = 0;
+                        Variable curVar = valNodeMembers[i];
+                        
+                        if(curVar.getValue() != null)
+                        {
+                            memberCount = curVar.getValue().getMembers(flashInterface.Session).Length;
+                        }
+
+                        Console.WriteLine("Member : " + curVar.getName() + " value: " + curVar.getValue());
+
+                        if(memberCount != 0)
+                        {
+                            Variable[] curVarMembers = curVar.getValue().getMembers(flashInterface.Session);
+
+                            for(j = 0; j < memberCount; ++j)
+                            {
+                                Console.WriteLine("\tMember: " + curVarMembers[j].getName() + " value: " + curVarMembers[j].getValue());
+                            }
+                        }
+                    }
+
+                }
+            }
+
         }
 
         public void ListChildItems(ValueNode node)
@@ -394,7 +442,12 @@ namespace FlashDebugger.Controls
                     {
                         inherited.Add(memberNode);
                     }
-                    else nodes.Add(memberNode);
+                    else
+                    {
+                        nodes.Add(memberNode);
+                    }
+
+                    Console.WriteLine("Variable: " + member.getName() + " member count: " + node.NextNode);
                 }
                 // inherited vars
                 if (inherited.Count > 0)

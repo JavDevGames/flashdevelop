@@ -397,6 +397,8 @@ namespace FlashDebugger
         private void flashInterface_BreakpointEvent(object sender)
         {
             UpdateUI(DebuggerState.BreakHalt);
+
+            
         }
 
         /// <summary>

@@ -1163,6 +1163,31 @@ namespace FlashDebugger
 
         public Variable[] GetLocals(int frameNumber)
         {
+            int i;
+            int j;
+            int localCount;
+            Frame curFrame;
+
+            Console.WriteLine("Total frames: " + GetFrames().Length);
+            for (i = 0; i < GetFrames().Length; ++i)
+            {
+                curFrame = GetFrames()[i];
+                localCount = curFrame.getLocals(m_Session).Length;
+                Console.WriteLine("Frame #" + i + " locals: " + localCount);
+
+                if(localCount != 0)
+                {
+                    Variable[] list = curFrame.getLocals(m_Session);
+                    for(j = 0;  j < localCount; ++j)
+                    {
+                        Console.WriteLine("\tVariable: " + list[j].getName() + " value: " + list[j].getValue());
+                    }
+                }
+
+            }
+
+            Console.WriteLine("====");
+
             return GetFrames()[frameNumber].getLocals(m_Session);
         }
 
