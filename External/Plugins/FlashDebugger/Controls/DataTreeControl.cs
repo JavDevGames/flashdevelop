@@ -371,7 +371,7 @@ namespace FlashDebugger.Controls
             {
                 ListChildItems(e.Node.Tag as ValueNode);
             }
-
+            /*
             Node node = e.Node.Tag as ValueNode;
             Node topMost = node;
 
@@ -383,6 +383,7 @@ namespace FlashDebugger.Controls
             
             if(topMost != null)
             {
+
                 ValueNode valNode = topMost as ValueNode;
 
                 if(valNode != null)
@@ -415,6 +416,7 @@ namespace FlashDebugger.Controls
 
                 }
             }
+             * */
 
         }
 

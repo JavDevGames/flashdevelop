@@ -5940,6 +5940,10 @@ Eigene Sprachumgebungen müssen eine Erweiterung der Standard-Sprachumgebung sei
     <value>Copy ID</value>
     <comment>Added after 4.7.2</comment>
   </data>
+  <data name="FlashDebugger.Label.Memory" xml:space="preserve">
+    <value>Memory</value>
+    <comment>Added after 4.7.2</comment>
+  </data>
   <data name="FlashDebugger.Label.CopyTree" xml:space="preserve">
     <value>Copy Tree</value>
     <comment>Added after 4.7.2</comment>

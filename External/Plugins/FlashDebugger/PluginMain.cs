@@ -219,7 +219,7 @@ namespace FlashDebugger
                     break;
             }
         }
-        
+
         #endregion
 
         #region Custom Methods

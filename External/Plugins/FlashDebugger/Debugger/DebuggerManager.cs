@@ -42,6 +42,8 @@ namespace FlashDebugger
         private Int32 m_CurrentFrame = 0;
         private static bool jvm_up = false;
 
+        private MemoryDialog mMemoryDialog;
+
         public DebuggerManager()
         {
             m_FlashInterface = new FlashInterface();
@@ -211,6 +213,13 @@ namespace FlashDebugger
                     }
                 }
             }
+        }
+
+        public void ShowMemoryDialog()
+        {
+            mMemoryDialog = new MemoryDialog();
+            mMemoryDialog.SetSession(m_FlashInterface.Session);
+            mMemoryDialog.ShowDialog();
         }
 
         #endregion

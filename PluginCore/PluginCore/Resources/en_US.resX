@@ -3765,6 +3765,9 @@ Please note that with injection enabled, you will not be able to use many projec
   <data name="FlashDebugger.Label.StartRemoteDebugging" xml:space="preserve">
     <value>Start Remote Session</value>
   </data>
+  <data name="FlashDebugger.Label.MemoryDebugging" xml:space="preserve">
+    <value>Memory Debugging</value>
+  </data>
   <data name="FlashDebugger.Description.VerboseOutput" xml:space="preserve">
     <value>Display detailed debugging information, like SWF load/unload events.</value>
   </data>
@@ -5958,6 +5961,10 @@ Custom locales must be an extension of a default locale, e.g. en-US.</value>
   </data>
   <data name="FlashDebugger.Label.CopyID" xml:space="preserve">
     <value>Copy ID</value>
+    <comment>Added after 4.7.2</comment>
+  </data>
+  <data name="FlashDebugger.Label.Memory" xml:space="preserve">
+    <value>Memory</value>
     <comment>Added after 4.7.2</comment>
   </data>
   <data name="FlashDebugger.Label.CopyTree" xml:space="preserve">

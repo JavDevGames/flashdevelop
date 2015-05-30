@@ -106,6 +106,9 @@
     <Compile Include="Controls\LocalsUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\MemoryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\ThreadsUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -147,6 +150,7 @@
     <Compile Include="Debugger\DebuggerManager.cs" />
     <Compile Include="Debugger\ExpressionContext.cs" />
     <Compile Include="Debugger\FlashInterface.cs" />
+    <Compile Include="Debugger\MemoryValue.cs" />
     <Compile Include="Debugger\VariableFacade.cs" />
     <Compile Include="Helpers\DataTreeExporterFactory.cs" />
     <Compile Include="Helpers\DefaultDataTreeExporter.cs" />
@@ -169,6 +173,9 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\MemoryDialog.resx">
+      <DependentUpon>MemoryDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>

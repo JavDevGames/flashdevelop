@@ -16,7 +16,7 @@ namespace FlashDebugger
         private ToolStripItem[] m_ToolStripButtons;
         private ToolStripSeparator m_ToolStripSeparator;
         private ToolStripButton StartContinueButton, PauseButton, StopButton, CurrentButton, RunToCursorButton, StepButton, NextButton, FinishButton;
-        private ToolStripMenuItem StartContinueMenu, PauseMenu, StopMenu, CurrentMenu, RunToCursorMenu, StepMenu, NextMenu, FinishMenu, ToggleBreakPointMenu, ToggleBreakPointEnableMenu, DeleteAllBreakPointsMenu, DisableAllBreakPointsMenu, EnableAllBreakPointsMenu, StartRemoteDebuggingMenu;
+        private ToolStripMenuItem StartContinueMenu, PauseMenu, StopMenu, CurrentMenu, RunToCursorMenu, StepMenu, NextMenu, FinishMenu, ToggleBreakPointMenu, ToggleBreakPointEnableMenu, DeleteAllBreakPointsMenu, DisableAllBreakPointsMenu, EnableAllBreakPointsMenu, StartRemoteDebuggingMenu, MemoryDebugging;
         private ToolStripMenuItem BreakOnAllMenu;
         private DebuggerState CurrentState = DebuggerState.Initializing;
         private List<ToolStripItem> debugItems;
@@ -106,12 +106,16 @@ namespace FlashDebugger
             StartRemoteDebuggingMenu = new ToolStripMenuItem(TextHelper.GetString("Label.StartRemoteDebugging"), null, StartRemote_Click, Keys.None);
             PluginBase.MainForm.RegisterShortcutItem("DebugMenu.StartRemoteDebugging", StartRemoteDebuggingMenu);
 
+            MemoryDebugging = new ToolStripMenuItem(TextHelper.GetString("Label.MemoryDebugging"), null, StartMemoryDebugging, Keys.None);
+            PluginBase.MainForm.RegisterShortcutItem("DebugMenu.StartRemoteDebugging", MemoryDebugging);
+
             debugItems = new List<ToolStripItem>(new ToolStripItem[]
             {
                 StartContinueMenu, PauseMenu, StopMenu, BreakOnAllMenu, new ToolStripSeparator(),
                 CurrentMenu, RunToCursorMenu, StepMenu, NextMenu, FinishMenu, new ToolStripSeparator(),
                 ToggleBreakPointMenu, DeleteAllBreakPointsMenu, ToggleBreakPointEnableMenu ,DisableAllBreakPointsMenu, EnableAllBreakPointsMenu, new ToolStripSeparator(),
-                StartRemoteDebuggingMenu
+                StartRemoteDebuggingMenu, new ToolStripSeparator(),
+                MemoryDebugging
             });
 
             debugMenu.DropDownItems.AddRange(debugItems.ToArray());
@@ -213,6 +217,11 @@ namespace FlashDebugger
                 PluginMain.debugManager.Continue_Click(sender, e);
             }
             else PluginMain.debugManager.Start(true);
+        }
+
+        void StartMemoryDebugging(Object sender, EventArgs e)
+        {
+            PluginMain.debugManager.ShowMemoryDialog();
         }
 
         #region Menus State Management

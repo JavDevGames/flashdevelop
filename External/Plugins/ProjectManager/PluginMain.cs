@@ -215,7 +215,6 @@ namespace ProjectManager
             menus.ProjectMenu.BuildProject.Click += BuildProjectClick;
             menus.ProjectMenu.CleanProject.Click += delegate { CleanProject(); };
             menus.ProjectMenu.Properties.Click += delegate { OpenProjectProperties(); };
-            menus.ProjectMenu.Memory.Click += delegate { OpenMemoryProperties(); };
             menus.RecentProjects.ProjectSelected += delegate(string projectPath) { OpenProjectSilent(projectPath); };
 
             buildActions = new BuildActions(MainForm, this);
@@ -777,15 +776,6 @@ namespace ProjectManager
                     menus.ProjectChanged(project);
                 }
                 else projectActions.UpdateASCompletion(MainForm, project);
-            }
-        }
-
-        void OpenMemoryProperties()
-        {
-            Project project = activeProject;
-            using (MemoryDialog dialog = project.CreateMemoryDialog())
-            {
-               dialog.ShowDialog(pluginUI);
             }
         }
 

@@ -173,8 +173,7 @@ namespace ProjectManager.Controls
         public ToolStripMenuItem BuildProject;
         public ToolStripMenuItem CleanProject;
         public ToolStripMenuItem Properties;
-        public ToolStripMenuItem Memory;
-
+        
         private List<ToolStripItem> AllItems;
 
         public ProjectMenu()
@@ -230,11 +229,6 @@ namespace ProjectManager.Controls
             PluginBase.MainForm.RegisterShortcutItem("ProjectMenu.Properties", Properties);
             AllItems.Add(Properties);
 
-            Memory = new ToolStripMenuItem(TextHelper.GetString("Label.Memory"));
-            Memory.Image = Icons.Options.Img;
-            PluginBase.MainForm.RegisterShortcutItem("ProjectMenu.Memory", Memory);
-            AllItems.Add(Memory);
-
             base.Text = TextHelper.GetString("Label.Project");
             base.DropDownItems.Add(NewProject);
             base.DropDownItems.Add(OpenProject);
@@ -249,7 +243,6 @@ namespace ProjectManager.Controls
             base.DropDownItems.Add(CleanProject);
             base.DropDownItems.Add(new ToolStripSeparator());
             base.DropDownItems.Add(Properties);
-            base.DropDownItems.Add(Memory);
         }
 
         public bool ProjectItemsEnabled
