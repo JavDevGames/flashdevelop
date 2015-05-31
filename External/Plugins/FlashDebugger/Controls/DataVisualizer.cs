@@ -71,19 +71,53 @@ namespace FlashDebugger.Controls
 
         private void Render()
         {
-            Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
+            int i;
+            Matrix4 lookat = Matrix4.LookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
-
-            GL.Rotate(mAngle, 0.0f, 1.0f, 0.0f);
-            mAngle += 0.01f;
-
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            DrawCube();
+            float posX;
+            float posY;
+            float w = 0.2f;
+            float h = 0.2f;
+            int col = 100;
+            int row = 100;
+            Color color;
+
+            Color[] colors = new Color[] { Color.Red, Color.Green, Color.Blue };
+
+            Rectangle r = new Rectangle();
+
+            GL.Begin(PrimitiveType.Quads);
+
+            for (i = 0; i < 1024; ++i)
+            {
+                color = colors[i % colors.Length];
+                posX = -12.0f + (float) (i % col) * (w + 0.1f);
+                posY = (float) (i/row) * (h+0.1f);
+
+                DrawQuad(posX, posY, w, h, color);
+            }
+
+            GL.End();
 
             mControl.SwapBuffers();
         }
+
+        private void DrawQuad(float posX, float posY, float width, float height, Color color)
+        {
+            float width2 = width / 2.0f;
+            float height2 = height / 2.0f;
+
+            GL.Color3(color);
+
+            GL.Vertex3(posX + -width2, posY + -height2, -1.0f);
+            GL.Vertex3(posX + -width2, posY + height2, -1.0f);
+            GL.Vertex3(posX + width2, posY + height2, -1.0f);
+            GL.Vertex3(posX + width2, posY + -height2, -1.0f);
+        }
+
 
         private void DrawCube()
         {
@@ -140,9 +174,10 @@ namespace FlashDebugger.Controls
             GL.Viewport(0, 0, c.ClientSize.Width, c.ClientSize.Height);
 
             float aspect_ratio = Width / (float)Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
+            Matrix4 perspective = Matrix4.CreateOrthographic(c.ClientSize.Width/16, c.ClientSize.Height/16, 0, 64);
+            //Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perpective);
+            GL.LoadMatrix(ref perspective);
         }
 
         #endregion
