@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using PluginCore.Localization;
 using flash.tools.debugger;
 using FlashDebugger.Debugger;
+using FlashDebugger.Controls;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace FlashDebugger
 {
@@ -21,20 +23,41 @@ namespace FlashDebugger
 
         private List<MemoryValue> mMemoryValueList;
 
+        /*
         private Dictionary<String, MemoryValue> mDefiningClassList;
         private Dictionary<String, MemoryValue> mNameSpaceList;
         private Dictionary<String, MemoryValue> mQualifiedNameList;
         private Dictionary<String, MemoryValue> mTypeList;
+        */
+
+        private ListView mMemoryListView;
+        private ColumnHeader defColumn;
+        private ColumnHeader nameColumn;
+        private ColumnHeader qualNameColumn;
+        private ColumnHeader typeColumn;
+        private ColumnHeader valueColumn;
         private Dictionary<String, MemoryValue> mValueList;
+        private OpenTK.GLControl DataScene;
+
+        private Boolean mSortDir;
+
+        private DataVisualizer mDataVisualizer;
 
         public MemoryDialog()
         {
             InitializeComponent();
+            Initialize3D();
             InitializeValues();
+        }
+
+        private void Initialize3D()
+        {
+            mDataVisualizer = new DataVisualizer(DataScene);
         }
 
         private void InitializeValues()
         {
+            mSortDir = false;
             mCreateDebugStrings = false;
             mMemoryValueList = new List<MemoryValue>();
         }
@@ -49,11 +72,18 @@ namespace FlashDebugger
         {
             this.mExploreButton = new System.Windows.Forms.Button();
             this.mTextBox = new System.Windows.Forms.TextBox();
+            this.mMemoryListView = new System.Windows.Forms.ListView();
+            this.defColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.nameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.qualNameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.valueColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DataScene = new OpenTK.GLControl();
             this.SuspendLayout();
             // 
             // mExploreButton
             // 
-            this.mExploreButton.Location = new System.Drawing.Point(346, 388);
+            this.mExploreButton.Location = new System.Drawing.Point(972, 656);
             this.mExploreButton.Name = "mExploreButton";
             this.mExploreButton.Size = new System.Drawing.Size(113, 23);
             this.mExploreButton.TabIndex = 0;
@@ -67,12 +97,69 @@ namespace FlashDebugger
             this.mTextBox.Multiline = true;
             this.mTextBox.Name = "mTextBox";
             this.mTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.mTextBox.Size = new System.Drawing.Size(447, 310);
+            this.mTextBox.Size = new System.Drawing.Size(310, 310);
             this.mTextBox.TabIndex = 1;
+            // 
+            // mMemoryListView
+            // 
+            this.mMemoryListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.defColumn,
+            this.nameColumn,
+            this.qualNameColumn,
+            this.typeColumn,
+            this.valueColumn});
+            this.mMemoryListView.FullRowSelect = true;
+            this.mMemoryListView.GridLines = true;
+            this.mMemoryListView.Location = new System.Drawing.Point(328, 12);
+            this.mMemoryListView.Name = "mMemoryListView";
+            this.mMemoryListView.Size = new System.Drawing.Size(732, 310);
+            this.mMemoryListView.TabIndex = 3;
+            this.mMemoryListView.UseCompatibleStateImageBehavior = false;
+            this.mMemoryListView.View = System.Windows.Forms.View.Details;
+            this.mMemoryListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.OnColumnClick);
+            // 
+            // defColumn
+            // 
+            this.defColumn.Text = "DefiningClass";
+            this.defColumn.Width = 80;
+            // 
+            // nameColumn
+            // 
+            this.nameColumn.Text = "Name Space";
+            this.nameColumn.Width = 100;
+            // 
+            // qualNameColumn
+            // 
+            this.qualNameColumn.Text = "Qualified Name";
+            this.qualNameColumn.Width = 140;
+            // 
+            // typeColumn
+            // 
+            this.typeColumn.Text = "Type";
+            this.typeColumn.Width = 160;
+            // 
+            // valueColumn
+            // 
+            this.valueColumn.Text = "Value";
+            this.valueColumn.Width = 100;
+            // 
+            // DataScene
+            // 
+            this.DataScene.BackColor = System.Drawing.Color.Black;
+            this.DataScene.Location = new System.Drawing.Point(12, 328);
+            this.DataScene.Name = "DataScene";
+            this.DataScene.Size = new System.Drawing.Size(510, 351);
+            this.DataScene.TabIndex = 4;
+            this.DataScene.VSync = false;
+            this.DataScene.Load += new System.EventHandler(this.DataScene_Load);
+            this.DataScene.Paint += new System.Windows.Forms.PaintEventHandler(this.DataScene_Paint);
+            this.DataScene.Resize += new System.EventHandler(this.DataScene_Resize);
             // 
             // MemoryDialog
             // 
-            this.ClientSize = new System.Drawing.Size(471, 423);
+            this.ClientSize = new System.Drawing.Size(1131, 691);
+            this.Controls.Add(this.DataScene);
+            this.Controls.Add(this.mMemoryListView);
             this.Controls.Add(this.mTextBox);
             this.Controls.Add(this.mExploreButton);
             this.Name = "MemoryDialog";
@@ -115,6 +202,41 @@ namespace FlashDebugger
             else
             {
                 PrintStats();
+                PopulateListView();
+            }
+        }
+
+        private void PopulateListView()
+        {
+            /*
+             curItem = new ListViewItem(serverList[i].name);
+                mItems.Add(curItem);
+
+                mItems[i].SubItems.Add(0 + "");
+                mItems[i].SubItems.Add(serverList[i].serverURL);
+                mItems[i].SubItems.Add(0 + "");
+                mItems[i].SubItems.Add(0 + "");
+                mItems[i].SubItems.Add(0 + "");
+                mItems[i].SubItems.Add(0 + "");
+
+                ServerView.Items.Add(mItems[i]);
+
+            */
+
+            int i;
+            ListViewItem curItem;
+            MemoryValue curMemItem;
+
+            for(i = 0; i < mMemoryValueList.Count; ++i)
+            {
+                curMemItem = mMemoryValueList[i];
+                curItem = new ListViewItem(curMemItem.pDefiningClass);
+                curItem.SubItems.Add(curMemItem.pNameSpace);
+                curItem.SubItems.Add(curMemItem.pQualifiedName);
+                curItem.SubItems.Add(curMemItem.pType);
+                curItem.SubItems.Add(curMemItem.pValue);
+
+                mMemoryListView.Items.Add(curItem);
             }
         }
 
@@ -242,7 +364,6 @@ namespace FlashDebugger
         private String ExploreLocals(Frame curFrame)
         {
             int i; 
-            int j;
             
             Variable[] locals;
 
@@ -322,14 +443,14 @@ namespace FlashDebugger
                 data += "    attributes: " + curVar.getAttributes() + " ,\r\n    definingClass: " + curVar.getDefiningClass() + " ,\r\n    hashCode: " + curVar.GetHashCode() + " ,\r\n    isolatedId: " + curVar.getIsolateId() + " ,\r\n    level: " + curVar.getLevel() + " ,\r\n    namespace: " + curVar.getNamespace() + " ,\r\n    qualifiedName: " + curVar.getQualifiedName() + " ,\r\n    scope: " + curVar.getScope() + " ,\r\n    type: " + typeName + "\r\n";
             }
 
-            Boolean isNew = true;
             String definingClass = curVar.getDefiningClass();
             String nameSpace = curVar.getNamespace();
             String qualName = curVar.getQualifiedName();
             String varType = typeName;
             String val = curVal + "";
-
+            
             /*
+            Boolean isNew = true;
             isNew = (isNew && !mDefiningClassList.ContainsKey(definingClass));
             isNew = (isNew && !mNameSpaceList.ContainsKey(nameSpace));
             isNew = (isNew && !mQualifiedNameList.ContainsKey(qualName));
@@ -340,7 +461,7 @@ namespace FlashDebugger
             {
               
             */
-            
+
             AddToLists(id, definingClass, nameSpace, qualName, varType, val);
             
             /*}*/
@@ -350,9 +471,29 @@ namespace FlashDebugger
 
         private void AddToLists(long id, String defClass, String nameSpace, String qualName, String varType, String val)
         {
+            int i;
+
             MemoryValue newMemVal = new MemoryValue(defClass, nameSpace, qualName, varType, val);
-            
-            mMemoryValueList.Add(newMemVal);
+
+            MemoryValue curVal;
+            Boolean unique = true;
+
+            for (i = 0; i < mMemoryValueList.Count; ++i)
+            {
+                curVal = mMemoryValueList[i];
+
+                if(IsEqual(newMemVal, curVal))
+                {
+                    unique = false;
+                    break;
+                }
+            }
+
+
+            if(unique)
+            {
+                mMemoryValueList.Add(newMemVal);
+            }
 
             /*
             mDefiningClassList.Add(defClass, newMemVal);
@@ -363,12 +504,53 @@ namespace FlashDebugger
             */
         }
 
+        private Boolean IsEqual(MemoryValue a, MemoryValue b)
+        {
+            int equalCount = 0;
+            int numProperties = 5;
+
+            if (a.pDefiningClass != null && b.pDefiningClass != null && a.pDefiningClass.Equals(b.pDefiningClass))
+            {
+                equalCount++;
+            }
+
+            if (a.pNameSpace != null && b.pNameSpace != null && a.pNameSpace.Equals(b.pNameSpace))
+            {
+                equalCount++;
+            }
+
+            if (a.pQualifiedName != null && b.pQualifiedName != null && a.pQualifiedName.Equals(b.pQualifiedName))
+            {
+                equalCount++;
+            }
+
+            if (a.pType != null && b.pType != null && a.pType.Equals(b.pType))
+            {
+                equalCount++;
+            }
+
+            if (a.pValue != null && b.pValue != null && a.pValue.Equals(b.pValue))
+            {
+                equalCount++;
+            }
+
+
+            return equalCount == numProperties;
+        }
+
         /// <summary>
         /// Closes the about dialog
         /// </summary>
         private void DialogCloseClick(Object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        public void OnColumnClick(Object sender, ColumnClickEventArgs e)
+        {
+            mSortDir = !mSortDir;
+            mMemoryListView.ListViewItemSorter = (IComparer)new MemoryValueItemComparer(e.Column, mSortDir);
+            mMemoryListView.Sort();
         }
 
         /// <summary>
@@ -386,6 +568,21 @@ namespace FlashDebugger
         }
 
         #endregion
+
+        private void DataScene_Load(object sender, EventArgs e)
+        {
+            mDataVisualizer.HandleLoad(e);
+        }
+
+        private void DataScene_Paint(object sender, PaintEventArgs e)
+        {
+            mDataVisualizer.Control_Paint(sender, e);
+        }
+
+        private void DataScene_Resize(object sender, EventArgs e)
+        {
+            mDataVisualizer.Control_Resize(sender, e);
+        }
     }
     
 }

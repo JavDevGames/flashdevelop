@@ -364,9 +364,6 @@ namespace FlashDebugger.Controls
 
         void TreeExpanding(Object sender, TreeViewAdvEventArgs e)
         {
-            int i;
-            int j;
-
             if (e.Node.Index >= 0)
             {
                 ListChildItems(e.Node.Tag as ValueNode);

@@ -89,6 +89,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\jni4net.n-0.8.4.0.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4" />
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -103,12 +105,16 @@
     <Compile Include="Controls\DataTree\ScalarNode.cs" />
     <Compile Include="Controls\DataTree\ValueNode.cs" />
     <Compile Include="Controls\DataTree\VariableNode.cs" />
+    <Compile Include="Controls\DataVisualizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\LocalsUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\MemoryDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Controls\MemoryValueItemComparer.cs" />
     <Compile Include="Controls\ThreadsUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
